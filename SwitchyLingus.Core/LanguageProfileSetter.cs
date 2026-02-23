@@ -1,13 +1,12 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Collections;
 using System.Management.Automation.Runspaces;
+using System.Runtime.Versioning;
 using SwitchyLingus.Core.Config;
 using SwitchyLingus.Core.Model;
 
 namespace SwitchyLingus.Core
 {
+    [SupportedOSPlatform("windows")]
     public static class LanguageProfileSetter
     {
         public static void SetProfile(LanguageProfile profile)
@@ -31,9 +30,9 @@ namespace SwitchyLingus.Core
         {
             var langType = Type.GetType(AppConfig.CurrentConfig.InternalAppConfig.WinUserLanguageType);
 
-            return langType == null 
-                ? throw new ArgumentNullException(AppConfig.CurrentConfig.InternalAppConfig.WinUserLanguageType) 
-                : profile.Languages.Select(CreateLanguage).ToList();
+            VerifyThat.IsNotNull(langType);
+
+            return profile.Languages.Select(CreateLanguage).ToList();
 
             dynamic CreateLanguage(Language language)
             {
@@ -41,6 +40,8 @@ namespace SwitchyLingus.Core
                                      ?? throw new Exception($"Failed to create an instance of {langType}");
                 resultLang.InputMethodTips.Clear();
                 resultLang.InputMethodTips.AddRange(language.InputMethods);
+                resultLang.Spellchecking = language.Spellchecking;
+                resultLang.Handwriting = language.Handwriting;
                 return resultLang;
             }
         }

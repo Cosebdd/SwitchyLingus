@@ -7,6 +7,10 @@ namespace SwitchyLingus.UI
     public sealed class ContextMenuItem : INotifyPropertyChanged
     {
         private string? _name;
+        
+        private bool _isChecked;
+        private bool _isImmutable;
+
 
         public string? Name
         {
@@ -14,6 +18,26 @@ namespace SwitchyLingus.UI
             set
             {
                 _name = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public bool IsChecked
+        {
+            get => _isChecked;
+            set
+            {
+                _isChecked = value;
+                OnPropertyChanged();
+            }
+        }
+        
+        public bool IsImmutable
+        {
+            get => _isImmutable;
+            set
+            {
+                _isImmutable = value;
                 OnPropertyChanged();
             }
         }

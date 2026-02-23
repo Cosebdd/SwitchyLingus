@@ -1,9 +1,9 @@
-﻿using System;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Input;
 using SwitchyLingus.Core;
+using SwitchyLingus.Core.Extension;
 using SwitchyLingus.Core.Model;
 
 namespace SwitchyLingus.UI
@@ -17,27 +17,33 @@ namespace SwitchyLingus.UI
             ProfileItems = new ObservableCollection<ContextMenuItem>();
         }
 
-        public void CreateLangProfileContextMenuItem(LanguageProfile profile)
+        public void CreateLangProfileContextMenuItem(LanguageProfile profile, string? currentLanguageProfileName = null)
         {
             var item = new ContextMenuItem()
             {
-                ItemCommand = SetProfileCommand(profile),
-                Name = profile.Name
+                Name = profile.Name,
+                IsChecked = currentLanguageProfileName?.Equals(profile.Name) ?? false,
+                IsImmutable = profile.IsMainProfile
             };
+
+            item.ItemCommand = SetProfileCommand(profile, item);
             ProfileItems.Add(item);
         }
 
         public void UpdateLangProfileContextMenuItem(ContextMenuItem item, LanguageProfile profile)
         {
             item.Name = profile.Name;
-            item.ItemCommand = SetProfileCommand(profile);
+            item.ItemCommand = SetProfileCommand(profile, item);
         }
 
-        private static ICommand SetProfileCommand(LanguageProfile languageProfile)
+        private ICommand SetProfileCommand(LanguageProfile languageProfile, ContextMenuItem item)
         {
             return new BasicCommand(() =>
                 {
-                    var task = new Task(() =>
+                    var previouslyChecked = ProfileItems.FirstOrDefault(i => i.IsChecked);
+                    ProfileItems.ForEach(i => i.IsChecked = false);
+                    item.IsChecked = true;
+                    Task.Run(() =>
                     {
                         try
                         {
@@ -46,9 +52,14 @@ namespace SwitchyLingus.UI
                         catch (Exception e)
                         {
                             Debug.WriteLine(e);
+                            Application.Current.Dispatcher.Invoke(() =>
+                            {
+                                item.IsChecked = false;
+                                if (previouslyChecked != null)
+                                    previouslyChecked.IsChecked = true;
+                            });
                         }
                     });
-                    task.Start();
                 }
             );
         }

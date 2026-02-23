@@ -1,14 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
+﻿using System.Diagnostics;
+using System.Runtime.Versioning;
 using SwitchyLingus.Core.Model;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Text.Json.Serialization.Metadata;
 
 namespace SwitchyLingus.Core.Config
 {
+    [SupportedOSPlatform("windows")]
     public class AppConfig
     {
+        private const string MainProfileName = "MainProfile";
+
+        private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions()
+        {
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
+            TypeInfoResolver = new DefaultJsonTypeInfoResolver(),
+            IncludeFields = true,
+            WriteIndented = true,
+        };
+
         private const string ConfigPath = @".\config.json";
 
         public IDictionary<string, LanguageProfile> LanguageProfiles => InternalAppConfig.LanguageProfiles;
@@ -22,7 +33,7 @@ namespace SwitchyLingus.Core.Config
             try
             {
                 var jsonConfig = File.ReadAllText(ConfigPath);
-                InternalAppConfig = JsonConvert.DeserializeObject<InternalAppConfig>(jsonConfig) ??
+                InternalAppConfig = JsonSerializer.Deserialize<InternalAppConfig>(jsonConfig, SerializerOptions) ??
                                     throw new Exception("Unable to deserialize config file.");
 
                 if (InternalAppConfig.LanguageProfiles == null
@@ -34,10 +45,27 @@ namespace SwitchyLingus.Core.Config
             {
                 Debug.WriteLine(e.Message);
                 Debug.WriteLine("Recreating basic config file");
-                var basicConfig = BasicConfigCreator.CreateBasicConfig("Main Profile");
+                var basicConfig = BasicConfigCreator.CreateBasicConfig(MainProfileName);
                 InternalAppConfig = basicConfig;
                 SaveConfig();
             }
+        }
+
+        public string? GetInstalledLanguageProfileName()
+        {
+            var installedKeyboards = LanguageProfileGetter
+                .ListInstalledLanguages()
+                .SelectMany(l => l.InputMethods)
+                .ToHashSet();
+
+            var keyboardsByProfile = LanguageProfiles
+                .Select(p => new
+                {
+                    Name = p.Key,
+                    InputMethodTips = p.Value.Languages.SelectMany(l => l.InputMethods).ToHashSet()
+                });
+
+            return keyboardsByProfile.FirstOrDefault(g => installedKeyboards.SetEquals(g.InputMethodTips))?.Name;
         }
 
         public void AddProfile(LanguageProfile profile)
@@ -48,17 +76,17 @@ namespace SwitchyLingus.Core.Config
 
         public void RemoveProfile(string profileName)
         {
-            if (!InternalAppConfig.LanguageProfiles.Remove(profileName))
-            {
-                Debug.WriteLine($"Profile {profileName} not found and can't be removed");
-                return;
-            }
+            ValidateProfile(profileName);
+
+            InternalAppConfig.LanguageProfiles.Remove(profileName);
 
             SaveConfig();
         }
 
         public void UpdateProfile(string oldName, LanguageProfile updatedProfile)
         {
+            ValidateProfile(oldName);
+
             if (oldName != updatedProfile.Name)
                 InternalAppConfig.LanguageProfiles.Remove(oldName);
 
@@ -66,9 +94,17 @@ namespace SwitchyLingus.Core.Config
             SaveConfig();
         }
 
+        private void ValidateProfile(string profileName)
+        {
+            if (!InternalAppConfig.LanguageProfiles.TryGetValue(profileName, out var profile))
+                throw new Exception($"Profile {profileName} does not exist");
+
+            VerifyThat.IsNot(profile.IsMainProfile, "Main profile can't be removed or updated");
+        }
+
         private void SaveConfig()
         {
-            var jsonConfig = JsonConvert.SerializeObject(InternalAppConfig);
+            var jsonConfig = JsonSerializer.Serialize(InternalAppConfig, SerializerOptions);
             File.WriteAllText(ConfigPath, jsonConfig);
         }
     }

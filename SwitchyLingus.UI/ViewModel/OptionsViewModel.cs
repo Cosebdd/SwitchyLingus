@@ -71,32 +71,31 @@ namespace SwitchyLingus.UI.ViewModel
                 AppConfig.CurrentConfig.RemoveProfile(SelectedItem.Name);
                 _itemsManager.ProfileItems.Remove(SelectedItem);
             }, 
-            () => SelectedItem != null
-            );
+            () => SelectedItem?.Name != null && !SelectedItem.IsImmutable);
         }
 
         private BasicCommand EditProfile()
         {
             return new BasicCommand(() =>
-            {
-                VerifyThat.IsNotNull(SelectedItem?.Name);
-                var oldName = SelectedItem.Name;
-                var existingProfile = AppConfig.CurrentConfig.LanguageProfiles[oldName];
-
-                var vm = new LayoutSelectionWizardViewModel(ProfileItems, existingProfile);
-                var wizard = new LayoutSelectionWizard
                 {
-                    DataContext = vm,
-                    Owner = _optionsDialog,
-                    Title = "Edit Profile"
-                };
-                if (wizard.ShowDialog() != true) return;
+                    VerifyThat.IsNotNull(SelectedItem?.Name);
+                    var oldName = SelectedItem.Name;
+                    var existingProfile = AppConfig.CurrentConfig.LanguageProfiles[oldName];
 
-                var updatedProfile = vm.BuildProfile();
-                AppConfig.CurrentConfig.UpdateProfile(oldName, updatedProfile);
-                _itemsManager.UpdateLangProfileContextMenuItem(SelectedItem, updatedProfile);
-            },
-            () => SelectedItem != null);
+                    var vm = new LayoutSelectionWizardViewModel(ProfileItems, existingProfile);
+                    var wizard = new LayoutSelectionWizard
+                    {
+                        DataContext = vm,
+                        Owner = _optionsDialog,
+                        Title = "Edit Profile"
+                    };
+                    if (wizard.ShowDialog() != true) return;
+
+                    var updatedProfile = vm.BuildProfile();
+                    AppConfig.CurrentConfig.UpdateProfile(oldName, updatedProfile);
+                    _itemsManager.UpdateLangProfileContextMenuItem(SelectedItem, updatedProfile);
+                },
+                () => SelectedItem?.Name != null && !SelectedItem.IsImmutable);
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

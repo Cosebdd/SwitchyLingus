@@ -1,19 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Management.Automation.Runspaces;
+﻿using System.Management.Automation.Runspaces;
+using System.Runtime.Versioning;
 using SwitchyLingus.Core.Model;
+using SwitchyLingus.Core.Unsafe;
 
 namespace SwitchyLingus.Core
 {
+    [SupportedOSPlatform("windows")]
     public static class LanguageProfileGetter
     {
-        internal static LanguageProfile InternalGetCurrentLanguageProfile(string name, out Type winUserLanguageType)
+        internal static LanguageProfile GetMainProfileFromPowershell(string name, out Type winUserLanguageType)
         {
             using var psRunspace = RunspaceFactory.CreateRunspace();
             psRunspace.Open();
             using var psPipeline = psRunspace.CreatePipeline();
-            var languageTags = new List<Language>();
+            var languages = new List<Language>();
 
             var command = new Command("Get-WinUserLanguageList");
 
@@ -26,18 +26,42 @@ namespace SwitchyLingus.Core
 
             foreach (var mem in member)
             {
-                languageTags.Add(
+                languages.Add(
                     new Language(mem.LanguageTag, mem.InputMethodTips.ToArray()
                     ));
             }
 
-            var languageProfile = new LanguageProfile(name, languageTags);
+            var languageProfile = new LanguageProfile
+            {
+                Languages = languages,
+                Name = name,
+                IsMainProfile = true
+            };
             return languageProfile;
         }
-
-        public static LanguageProfile GetCurrentLanguageProfile(string name)
+        
+        internal static IEnumerable<Language> ListInstalledLanguages()
         {
-            return InternalGetCurrentLanguageProfile(name, out var _);
+            var keyboards = ListInstalledKeyboards();
+            return keyboards.GroupBy(k => k.LanguageTag)
+                .Select(g =>
+                    new Language(
+                        g.Key,
+                        g.Select(l => l.InputMethodTip).ToArray())
+                );
+        }
+
+        private static IEnumerable<KeyboardLayoutInfo> ListInstalledKeyboards()
+        {
+            var availableLanguages = InputMethod.GetInstalledInputMethods();
+            var allKeyboards = KeyboardLayoutEnumerator.AvailableLayouts;
+
+            foreach (var availableLanguage in availableLanguages)
+            {
+                var tip = availableLanguage.GetInputMethodTip();
+                if (tip is not null && allKeyboards.TryGetValue(tip, out var keyboard))
+                    yield return keyboard;
+            }
         }
     }
 }

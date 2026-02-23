@@ -1,17 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System.Runtime.Versioning;
 using SwitchyLingus.Core.Model;
 
 namespace SwitchyLingus.Core.Config
 {
+    [SupportedOSPlatform("windows")]
     internal static class BasicConfigCreator
     {
         public static InternalAppConfig CreateBasicConfig(string name)
         {
-            var langProfile = LanguageProfileGetter.InternalGetCurrentLanguageProfile(name, out var type);
+            var langProfile = LanguageProfileGetter.GetMainProfileFromPowershell(name, out var type);
             VerifyThat.IsNotNull(type.AssemblyQualifiedName);
             var languageProfiles = new Dictionary<string, LanguageProfile>(){{langProfile.Name, langProfile}};
 
-            return new InternalAppConfig(languageProfiles, type.AssemblyQualifiedName);
+            return new InternalAppConfig()
+            {
+                LanguageProfiles = languageProfiles,
+                WinUserLanguageType = type.AssemblyQualifiedName,
+            };
         }
     }
 }

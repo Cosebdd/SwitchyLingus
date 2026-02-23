@@ -1,16 +1,15 @@
-﻿using System.Collections.Generic;
-
-namespace SwitchyLingus.Core.Model
+﻿namespace SwitchyLingus.Core.Model
 {
     public class LanguageProfile
     {
-        public LanguageProfile(string name, IEnumerable<Language> languages)
-        {
-            Name = name;
-            Languages = languages;
-        }
+        public required string Name { get; init; }
+        public required IEnumerable<Language> Languages { get; init; }
 
-        public string Name { get; set; }
-        public IEnumerable<Language> Languages { get; set; } 
+        public bool IsMainProfile { get; init; } = false;
+
+        public override string ToString()
+        {
+            return string.Join(",", Languages.Select(l => l.Tag));
+        }
     }
 }

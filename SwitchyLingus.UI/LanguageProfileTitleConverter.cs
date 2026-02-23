@@ -13,7 +13,7 @@ namespace SwitchyLingus.UI
             if (!(value is string profileName))
                 return null;
             var profile = AppConfig.CurrentConfig.LanguageProfiles[profileName];
-            return $"{profile.Name} ({string.Join(",",profile.Languages.Select(l => l.Tag))})";
+            return $"{profile.Name} ({profile})";
         }
 
         public object ConvertBack(object? value, Type targetType, object? parameter, CultureInfo culture)

@@ -184,7 +184,11 @@ namespace SwitchyLingus.UI.ViewModel
                         .ToArray())
                 );
 
-            return new LanguageProfile(ProfileName, languages.ToList());
+            return new LanguageProfile()
+            {
+                Name = ProfileName,
+                Languages = languages.ToList()
+            };
         }
 
         public event PropertyChangedEventHandler? PropertyChanged;

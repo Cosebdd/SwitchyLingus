@@ -56,8 +56,10 @@ namespace SwitchyLingus.UI.ViewModel
 
         private void CreateProfileMenuItems()
         {
+            var installedProfileName = AppConfig.CurrentConfig.GetInstalledLanguageProfileName();
+            
             _config.LanguageProfiles.Values
-                .ForEach(_itemsManager.CreateLangProfileContextMenuItem);
+                .ForEach(p => _itemsManager.CreateLangProfileContextMenuItem(p, installedProfileName));
         }
     }
 }

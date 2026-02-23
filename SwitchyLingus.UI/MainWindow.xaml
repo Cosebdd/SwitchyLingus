@@ -31,8 +31,13 @@
                     </CompositeCollection>
                 </ContextMenu.ItemsSource>
                 <ContextMenu.ItemContainerStyle>
-                    <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
+                    <Style TargetType="MenuItem">
                         <Setter Property="Command" Value="{Binding ItemCommand}" />
+                        <Style.Triggers>
+                            <DataTrigger Binding="{Binding IsChecked}" Value="True">
+                                <Setter Property="IsChecked" Value="True" />
+                            </DataTrigger>
+                        </Style.Triggers>
                     </Style>
                 </ContextMenu.ItemContainerStyle>
                 <ContextMenu.ItemTemplate>
