@@ -314,8 +314,20 @@
                 <ControlTemplate TargetType="MenuItem">
                     <Border x:Name="Bd"
                             Background="{TemplateBinding Background}"
-                            Padding="16,6">
-                        <ContentPresenter ContentSource="Header"/>
+                            Padding="8,6">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="16"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock x:Name="Check"
+                                       Grid.Column="0"
+                                       Text="✓"
+                                       Foreground="{TemplateBinding Foreground}"
+                                       Visibility="Collapsed"
+                                       VerticalAlignment="Center"/>
+                            <ContentPresenter Grid.Column="1" ContentSource="Header"/>
+                        </Grid>
                     </Border>
                     <ControlTemplate.Triggers>
                         <Trigger Property="IsHighlighted" Value="True">
@@ -323,6 +335,9 @@
                                     Value="{StaticResource HoverBrush}"/>
                             <Setter Property="Foreground"
                                     Value="{StaticResource HoverTextBrush}"/>
+                        </Trigger>
+                        <Trigger Property="IsChecked" Value="True">
+                            <Setter TargetName="Check" Property="Visibility" Value="Visible"/>
                         </Trigger>
                     </ControlTemplate.Triggers>
                 </ControlTemplate>

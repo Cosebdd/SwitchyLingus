@@ -31,7 +31,7 @@
                     </CompositeCollection>
                 </ContextMenu.ItemsSource>
                 <ContextMenu.ItemContainerStyle>
-                    <Style TargetType="MenuItem">
+                    <Style TargetType="MenuItem" BasedOn="{StaticResource {x:Type MenuItem}}">
                         <Setter Property="Command" Value="{Binding ItemCommand}" />
                         <Style.Triggers>
                             <DataTrigger Binding="{Binding IsChecked}" Value="True">
