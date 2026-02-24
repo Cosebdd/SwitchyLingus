@@ -20,7 +20,9 @@ namespace SwitchyLingus.Core.Config
             WriteIndented = true,
         };
 
-        private const string ConfigPath = @".\config.json";
+        private static readonly string ConfigDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "SwitchyLingus");
+
+        private static readonly string ConfigPath = Path.Combine(ConfigDir, "config.json");
 
         public IDictionary<string, LanguageProfile> LanguageProfiles => InternalAppConfig.LanguageProfiles;
 
@@ -32,6 +34,9 @@ namespace SwitchyLingus.Core.Config
         {
             try
             {
+                if (!Directory.Exists(ConfigDir))
+                    Directory.CreateDirectory(ConfigDir);
+                
                 var jsonConfig = File.ReadAllText(ConfigPath);
                 InternalAppConfig = JsonSerializer.Deserialize<InternalAppConfig>(jsonConfig, SerializerOptions) ??
                                     throw new Exception("Unable to deserialize config file.");
