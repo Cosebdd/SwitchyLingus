@@ -13,11 +13,14 @@ namespace SwitchyLingus.UI.ViewModel
         private readonly Options _optionsDialog;
         private readonly LanguageProfileItemsManager _itemsManager;
         private ContextMenuItem? _selectedItem;
+        private bool _runOnStartup;
 
         public OptionsViewModel(LanguageProfileItemsManager itemsManager, Options optionsDialog)
         {
             _itemsManager = itemsManager;
             _optionsDialog = optionsDialog;
+            
+            _runOnStartup = StartupManager.IsRunOnStartup();
 
             CreateNewProfileCommand = CreateNewProfile();
             EditProfileCommand = EditProfile();
@@ -32,6 +35,17 @@ namespace SwitchyLingus.UI.ViewModel
                 _selectedItem = value;
                 EditProfileCommand.RaiseCanExecuteChanged();
                 RemoveProfileCommand.RaiseCanExecuteChanged();
+                OnPropertyChanged();
+            }
+        }
+
+        public bool RunOnStartup
+        {
+            get => _runOnStartup;
+            set
+            {
+                StartupManager.SetRunOnStartup(value);
+                _runOnStartup = StartupManager.IsRunOnStartup();
                 OnPropertyChanged();
             }
         }

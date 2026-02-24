@@ -1,4 +1,4 @@
-﻿<Window x:Class="SwitchyLingus.UI.Options"
+<Window x:Class="SwitchyLingus.UI.Options"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -10,18 +10,37 @@
         Title="Options" Height="300" Width="400"
         Icon="Icon24.ico"
         Style="{StaticResource DefaultStyle}">
+    <Window.Tag>
+        <Button Style="{StaticResource TitleBarButtonStyle}"
+                Width="24" Height="24"
+                WindowChrome.IsHitTestVisibleInChrome="True"
+                Click="GearButton_Click"
+                Margin="0,0,0,2"
+                >
+            <TextBlock Text="⚙️" FontSize="14" />
+            <Button.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Run on startup"
+                              IsCheckable="True"
+                              IsChecked="{Binding PlacementTarget.DataContext.RunOnStartup,
+                                          RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                </ContextMenu>
+            </Button.ContextMenu>
+        </Button>
+    </Window.Tag>
     <Window.Resources>
         <local:LanguageProfileTitleConverter x:Key="ValueConverter" />
     </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="3*"></ColumnDefinition>
-            <ColumnDefinition></ColumnDefinition>
+            <ColumnDefinition Width="3*"/>
+            <ColumnDefinition/>
         </Grid.ColumnDefinitions>
-        <ListView Grid.Column="0" Margin="5" ItemsSource="{Binding ProfileItems}" SelectedItem="{Binding SelectedItem}">
+        <ListView Grid.Column="0" Margin="5" ItemsSource="{Binding ProfileItems}"
+                  SelectedItem="{Binding SelectedItem}">
             <ListView.ItemTemplate>
                 <DataTemplate>
-                    <TextBlock Text="{Binding Path=Name, Converter={StaticResource ValueConverter}}"></TextBlock>
+                    <TextBlock Text="{Binding Path=Name, Converter={StaticResource ValueConverter}}"/>
                 </DataTemplate>
             </ListView.ItemTemplate>
         </ListView>
@@ -32,4 +51,3 @@
         </StackPanel>
     </Grid>
 </Window>
-
