@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,14 +24,21 @@ namespace SwitchyLingus.UI
         {
             InitializeComponent();
         }
-
-        private void GearButton_Click(object sender, RoutedEventArgs e)
+        
+        private void OptionsButton_Click(object sender, RoutedEventArgs e)
         {
-            if (sender is Button btn && btn.ContextMenu != null)
-            {
-                btn.ContextMenu.PlacementTarget = btn;
-                btn.ContextMenu.IsOpen = true;
-            }
+            if (sender is not Button btn || btn.ContextMenu == null) return;
+
+            btn.ContextMenu.PlacementTarget = btn;
+            btn.ContextMenu.Closed += ContextMenuOnClosed;
+            btn.IsHitTestVisible = false;
+            btn.ContextMenu.IsOpen = true;
+        }
+
+        private void ContextMenuOnClosed(object sender, RoutedEventArgs e)
+        {
+            OptionsButton.IsHitTestVisible = true;
+            ((ContextMenu)sender).Closed -= ContextMenuOnClosed;
         }
     }
 }

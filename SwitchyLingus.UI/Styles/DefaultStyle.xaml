@@ -454,11 +454,13 @@
                                                 WindowChrome.IsHitTestVisibleInChrome="True"
                                                 Style="{StaticResource TitleBarButtonStyle}">
                                             <Grid MaxHeight="14" MaxWidth="14">
+                                                <Viewbox Width="9" Height="9">
                                                 <Path
                                                     Stroke="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                                     StrokeThickness="2"
                                                     Stretch="None"
                                                     Data="M0,0 L8,8 M0,8 L8,0" />
+                                                </Viewbox>
                                             </Grid>
                                         </Button>
 
