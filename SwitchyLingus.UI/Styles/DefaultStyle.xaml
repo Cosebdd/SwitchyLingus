@@ -395,7 +395,7 @@
                     <Border
                         x:Name="PART_Container"
                         Background="{StaticResource BackgroundBrush}"
-                        BorderBrush="{StaticResource WindowBorder}"
+                        BorderBrush="{DynamicResource WindowBorder}"
                         BorderThickness="1"
                         CornerRadius="8">
                         <Grid TextOptions.TextRenderingMode="ClearType"

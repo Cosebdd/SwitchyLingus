@@ -4,10 +4,13 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         ShowInTaskbar="False"
-        Title="Create New Profile" Height="500" Width="800"       
+        Title="Create New Profile" 
+        Height="500" 
+        Width="800"       
+        MinHeight="300"
+        MinWidth="470"
         Icon="Icon24.ico"
         Style="{StaticResource DefaultStyle}">
     <Grid Margin="10">
@@ -42,7 +45,7 @@
                         <GridView>
                             <GridViewColumn Header="Layout" Width="200"
                                             DisplayMemberBinding="{Binding DisplayName}"/>
-                            <GridViewColumn Header="Language" Width="80"
+                            <GridViewColumn Header="Language" Width="100"
                                             DisplayMemberBinding="{Binding LanguageTag}"/>
                         </GridView>
                     </ListView.View>

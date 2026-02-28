@@ -99,6 +99,15 @@ namespace SwitchyLingus.Core.Config
             SaveConfig();
         }
 
+        public LanguageProfile RecreateMainProfile()
+        {
+            var newProfile = LanguageProfileGetter.GetMainProfileFromPowershell(MainProfileName, out _);
+
+            InternalAppConfig.LanguageProfiles[MainProfileName] = newProfile;
+            SaveConfig();
+            return newProfile;
+        }
+
         private void ValidateProfile(string profileName)
         {
             if (!InternalAppConfig.LanguageProfiles.TryGetValue(profileName, out var profile))

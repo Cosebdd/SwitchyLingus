@@ -7,9 +7,11 @@ namespace SwitchyLingus.UI
     public sealed class ContextMenuItem : INotifyPropertyChanged
     {
         private string? _name;
-        
+
         private bool _isChecked;
         private bool _isImmutable;
+
+        private ICommand? _itemCommand;
 
 
         public string? Name
@@ -21,7 +23,7 @@ namespace SwitchyLingus.UI
                 OnPropertyChanged();
             }
         }
-        
+
         public bool IsChecked
         {
             get => _isChecked;
@@ -31,7 +33,7 @@ namespace SwitchyLingus.UI
                 OnPropertyChanged();
             }
         }
-        
+
         public bool IsImmutable
         {
             get => _isImmutable;
@@ -42,7 +44,15 @@ namespace SwitchyLingus.UI
             }
         }
 
-        public ICommand? ItemCommand { get; set; }
+        public ICommand? ItemCommand
+        {
+            get => _itemCommand;
+            set
+            {
+                _itemCommand = value;
+                OnPropertyChanged();
+            }
+        }
 
         public event PropertyChangedEventHandler? PropertyChanged;
 

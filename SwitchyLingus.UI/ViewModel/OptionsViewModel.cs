@@ -25,6 +25,7 @@ namespace SwitchyLingus.UI.ViewModel
             CreateNewProfileCommand = CreateNewProfile();
             EditProfileCommand = EditProfile();
             RemoveProfileCommand = RemoveProfile();
+            RecreateMainProfileCommand = CreateRecreateMainProfileCommand();
         }
 
         public ContextMenuItem? SelectedItem
@@ -58,6 +59,8 @@ namespace SwitchyLingus.UI.ViewModel
 
         public BasicCommand RemoveProfileCommand { get; }
 
+        public ICommand RecreateMainProfileCommand { get; }
+
         private BasicCommand CreateNewProfile()
         {
             return new BasicCommand(() =>
@@ -86,6 +89,24 @@ namespace SwitchyLingus.UI.ViewModel
                 _itemsManager.ProfileItems.Remove(SelectedItem);
             }, 
             () => SelectedItem?.Name != null && !SelectedItem.IsImmutable);
+        }
+
+        private ICommand CreateRecreateMainProfileCommand()
+        {
+            return new BasicCommand(() =>
+            {
+                var dialog = new ConfirmDialog(
+                    "Recreate the main profile using your current language settings?",
+                    "Recreate main profile")
+                {
+                    Owner = _optionsDialog
+                };
+                if (dialog.ShowDialog() != true) return;
+
+                var newProfile = AppConfig.CurrentConfig.RecreateMainProfile();
+                var mainItem = _itemsManager.ProfileItems.First(i => i.IsImmutable);
+                _itemsManager.UpdateLangProfileContextMenuItem(mainItem, newProfile);
+            });
         }
 
         private BasicCommand EditProfile()

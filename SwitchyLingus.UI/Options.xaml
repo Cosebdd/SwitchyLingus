@@ -7,7 +7,11 @@
         mc:Ignorable="d"
         ShowInTaskbar="True"
         WindowStartupLocation="CenterScreen"
-        Title="Options" Height="300" Width="400"
+        Title="Options" 
+        Height="300" 
+        Width="400"
+        MinHeight="200"
+        MinWidth="350"
         Icon="Icon24.ico"
         Style="{StaticResource DefaultStyle}">
     <Window.Tag>
@@ -27,6 +31,9 @@
                               IsCheckable="True"
                               IsChecked="{Binding PlacementTarget.DataContext.RunOnStartup,
                                           RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
+                    <MenuItem Header="Recreate main profile"
+                              Command="{Binding PlacementTarget.DataContext.RecreateMainProfileCommand,
+                                        RelativeSource={RelativeSource AncestorType=ContextMenu}}" />
                 </ContextMenu>
             </Button.ContextMenu>
         </Button>
