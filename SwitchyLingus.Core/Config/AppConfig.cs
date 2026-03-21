@@ -10,7 +10,7 @@ namespace SwitchyLingus.Core.Config
     [SupportedOSPlatform("windows")]
     public class AppConfig
     {
-        private const string MainProfileName = "MainProfile";
+        private const string MainProfileName = "Main Profile";
 
         private static readonly JsonSerializerOptions SerializerOptions = new JsonSerializerOptions()
         {
