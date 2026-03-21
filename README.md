@@ -1,4 +1,4 @@
-﻿<p align="center"><img src="https://raw.githubusercontent.com/Cosebdd/SwitchyLingus/refs/heads/master/Graphics/icon.svg" alt="SwitchyLingus Banner" width="256"/></p>
+﻿<p align="center"><img src="https://raw.githubusercontent.com/Cosebdd/SwitchyLingus/refs/heads/master/Graphics/Icons/icon.svg" alt="SwitchyLingus Banner" width="256"/></p>
 <h1 align="center">SwitchyLingus</h1>
 <h3 align="center">Save keyboard layout setups and switch between them in one click</h3>
 <div align="center">
