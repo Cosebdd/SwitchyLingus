@@ -1,6 +1,6 @@
 ﻿<p align="center"><img src="https://raw.githubusercontent.com/Cosebdd/SwitchyLingus/refs/heads/master/Graphics/Icons/icon.svg" alt="SwitchyLingus Banner" width="256"/></p>
 <h1 align="center">SwitchyLingus</h1>
-<h3 align="center">Save keyboard layout setups and switch between them in one click</h3>
+<h3 align="center">Save keyboard layout profiles and switch between them in one click</h3>
 <div align="center">
   <a href="./LICENSE.txt"><img src="https://img.shields.io/github/license/Cosebdd/SwitchyLingus?label=License&color=brightgreen&cacheSeconds=3600" alt="License"/></a>
   <a href="https://github.com/Cosebdd/SwitchyLingus/releases/latest"><img src="https://img.shields.io/github/v/release/Cosebdd/SwitchyLingus?label=Release&color=brightgreen&cacheSeconds=3600" alt="Release"/></a>
@@ -18,7 +18,7 @@ If you work with more than one language on Windows, setting up keyboard layouts 
 
 You add a language, then realize Windows gave you a layout you do not want. So you go into settings, remove it, and add the one you actually need.
 
-SwitchyLingus makes that easier. It lets you save different keyboard layout setups as profiles and switch between them with one click.
+SwitchyLingus makes that easier. It lets you save different keyboard layout profiles and switch between them with one click.
 
 ## How it works
 
